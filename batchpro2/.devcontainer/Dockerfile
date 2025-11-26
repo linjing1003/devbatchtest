@@ -1,4 +1,4 @@
-FROM hub.docker.alibaba-inc.com/library/eclipse-temurin:17
+FROM eclipse-temurin:17
 
 # Install git and maven
 RUN apt-get update && \
