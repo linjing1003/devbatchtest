@@ -3,6 +3,8 @@
 # 使用 devcontainer CLI 自动启动所有 DevContainer
 # 扫描当前目录下的所有 .devcontainer 并批量启动
 
+set -x  # 开启命令调试输出
+
 echo "=== 开始扫描并启动 DevContainers ==="
 
 # 检查 devcontainer CLI 是否安装
@@ -19,18 +21,44 @@ echo ""
 for dir in */; do
     if [ -d "${dir}.devcontainer" ]; then
         PROJECT_NAME=$(basename "$dir")
+        echo "======================================"
         echo ">>> 正在启动: $PROJECT_NAME"
+        echo "======================================"
         
-        # 使用 devcontainer CLI 启动（会自动执行 postCreateCommand）
-        cd "$dir" && devcontainer up --workspace-folder . && cd ..
+        # 显示项目路径
+        PROJECT_PATH="$(pwd)/${dir}"
+        echo "项目路径: $PROJECT_PATH"
         
-        echo "  ✓ $PROJECT_NAME 启动成功"
+        # 进入项目目录
+        echo "步骤1: 进入项目目录..."
+        cd "$dir" || exit 1
+        
+        # 执行 devcontainer up 并显示详细输出
+        echo "步骤2: 执行 devcontainer up..."
+        echo "----------------------------------------"
+        
+        # 使用 --log-level trace 获取详细日志
+        devcontainer up --workspace-folder . --log-level info
+        
+        EXIT_CODE=$?
+        echo "----------------------------------------"
+        
+        if [ $EXIT_CODE -eq 0 ]; then
+            echo "✓ $PROJECT_NAME 启动成功"
+        else
+            echo "✗ $PROJECT_NAME 启动失败 (退出码: $EXIT_CODE)"
+        fi
+        
+        # 返回上级目录
+        cd ..
         echo ""
     fi
 done
 
+echo "======================================"
 echo "=== 运行中的容器 ==="
+echo "======================================"
 docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Image}}"
 
 echo ""
-echo "✓ 完成！所有 DevContainer 已启动"
+echo "✓ 完成!所有 DevContainer 已启动"
