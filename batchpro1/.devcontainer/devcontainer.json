@@ -1,0 +1,16 @@
+{
+  "name": "BatchPro1 - Java 17 Development Container",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "vscjava.vscode-java-pack"
+      ]
+    }
+  },
+  "postCreateCommand": "git clone https://github.com/linjing1003/linjingSpring.git /opt/batchpro1 && cd /opt/batchpro1 && mvn install",
+  "workspaceFolder": "/workspace/batchpro1",
+  "remoteUser": "root"
+}
