@@ -6,8 +6,8 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-# Create /opt directory if it doesn't exist
-RUN mkdir -p /opt
+# 创建必要的目录
+RUN mkdir -p /opt /workspaces/batchpro2
 
 # Set working directory
-WORKDIR /workspace
+WORKDIR /workspaces/batchpro2
