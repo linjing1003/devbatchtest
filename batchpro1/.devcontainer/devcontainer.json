@@ -11,6 +11,6 @@
     }
   },
   "postCreateCommand": "git clone https://github.com/linjing1003/linjingSpring.git /opt/batchpro1 && cd /opt/batchpro1 && mvn install",
-  "workspaceFolder": "/workspace/batchpro1",
+  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
   "remoteUser": "root"
 }
