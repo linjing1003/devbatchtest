@@ -1,0 +1,1 @@
+git clone https://github.com/StarRocks/starrocks.git /opt/starrocks

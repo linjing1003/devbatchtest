@@ -1,0 +1,8 @@
+{
+  "name": "StarRocks - Dev Container",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+  "workspaceFolder": "/workspaces/starrocks",
+  "remoteUser": "root"
+}
