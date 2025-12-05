@@ -1,19 +1,30 @@
+import os
 import oss2
 
 # 这些需要你自己从阿里云控制台获取 / 设置
-access_key_id = ""
-access_key_secret = ""
-bucket_name = "aigc-public-dataset"
-endpoint = "https://oss-cn-shanghai.aliyuncs.com"  # 换成你的地域 endpoint
+ACCESS_KEY_ID = ""
+ACCESS_KEY_SECRET = ""
+BUCKET_NAME = "aigc-public-dataset"
+ENDPOINT = "https://oss-cn-shanghai.aliyuncs.com"  # 换成你的地域 endpoint
 
-auth = oss2.Auth(access_key_id, access_key_secret)
-bucket = oss2.Bucket(auth, endpoint, bucket_name)
+if not ACCESS_KEY_ID or not ACCESS_KEY_SECRET:
+    raise RuntimeError("请先设置环境变量 ALIBABA_ACCESS_KEY_ID / ALIBABA_ACCESS_KEY_SECRET")
 
-object_key = "huggingface/liveCodeBench/data/biannual_2024_7_12-00000-of-00001.parquet"  # 文件在 bucket 中的路径
+# 要上传的本地文件
+LOCAL_FILE_PATH = "/Users/zhangwenbin/Downloads/devdemo/devbatchtest/pythonfile/testfile1.txt"     # 本地文件路径
+# 上传到 OSS 里的对象路径（key）
+OSS_OBJECT_KEY = "huggingface/liveCodeBench/data/testfile1.txt"
 
-try:
-    result = bucket.get_object(object_key)
-    content = result.read(200)  # 读前 200 字节看看
-    print("Read success, first 200 bytes:", content)
-except Exception as e:
-    print("Error:", e)
+# 创建 Auth 和 Bucket
+auth = oss2.Auth(ACCESS_KEY_ID, ACCESS_KEY_SECRET)
+bucket = oss2.Bucket(auth, ENDPOINT, BUCKET_NAME)
+
+# 执行上传
+with open(LOCAL_FILE_PATH, "rb") as f:
+    result = bucket.put_object(OSS_OBJECT_KEY, f)
+
+# 检查结果
+print("Status:", result.status)  # 200 表示成功
+if result.status == 200:
+    url = f"https://{BUCKET_NAME}.oss-cn-shanghai.aliyuncs.com/{OSS_OBJECT_KEY}"
+    print("File uploaded to:", url)
